@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Cycleless — Минус пять часов</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --accent: #d4ff33;
+        --accent-dim: rgba(212, 255, 51, 0.08);
+        --accent-border: rgba(212, 255, 51, 0.25);
+        --bg: #07080a;
+        --bg-2: #0c0f13;
+        --bg-3: #111620;
+        --border: rgba(255, 255, 255, 0.06);
+        --text: #dde4ec;
+        --muted: #5a6a7a;
+        --font-d: "Syne", sans-serif;
+        --font-b: "DM Sans", sans-serif;
+        --font-m: "JetBrains Mono", monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: var(--font-b);
+        -webkit-font-smoothing: antialiased;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right)
+          env(safe-area-inset-bottom) env(safe-area-inset-left);
+      }
+      .video-container {
+        width: 608px;
+        height: 1080px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+        background: var(--bg);
+        box-shadow: 0 0 60px rgba(212, 255, 51, 0.1);
+      }
+      .slides-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+      }
+      .slide {
+        width: 100%;
+        height: 1080px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 40px 80px;
+        position: relative;
+        background: var(--bg);
+        text-align: center;
+        box-sizing: border-box;
+      }
+      .slide::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(212, 255, 51, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(212, 255, 51, 0.03) 1px, transparent 1px);
+        background-size: 64px 64px;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .slide-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        max-width: 500px;
+        width: 100%;
+      }
+      .slide-icon {
+        font-size: 72px;
+        color: var(--accent);
+        margin-bottom: 12px;
+        filter: drop-shadow(0 0 20px rgba(212, 255, 51, 0.3));
+      }
+      .slide-title {
+        font-family: var(--font-d);
+        font-weight: 800;
+        font-size: 38px;
+        line-height: 1.1;
+        color: var(--text);
+        letter-spacing: -0.02em;
+      }
+      .slide-title .accent {
+        color: var(--accent);
+      }
+      .slide-subtitle {
+        font-family: var(--font-m);
+        font-size: 15px;
+        color: var(--muted);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .slide-stat {
+        font-family: var(--font-d);
+        font-weight: 800;
+        font-size: 60px;
+        color: var(--accent);
+        line-height: 1;
+        margin: 4px 0;
+      }
+      .slide-text {
+        font-size: 17px;
+        color: var(--text);
+        line-height: 1.5;
+        opacity: 0.85;
+      }
+      .slide-tag {
+        background: var(--accent-dim);
+        border: 1px solid var(--accent-border);
+        padding: 8px 18px;
+        border-radius: 30px;
+        font-family: var(--font-m);
+        font-size: 14px;
+        color: var(--accent);
+      }
+      .pipeline-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 8px;
+      }
+      .pipeline-node {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg-3);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 14px;
+        width: 100px;
+      }
+      .pipeline-node i {
+        font-size: 28px;
+        color: var(--accent);
+      }
+      .pipeline-node .node-title {
+        font-family: var(--font-m);
+        font-size: 11px;
+        color: var(--text);
+      }
+      .pipeline-node .node-sub {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .pipeline-arrow {
+        color: var(--muted);
+        font-size: 18px;
+        margin: 0 2px;
+      }
+      .progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--border);
+        z-index: 2;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--accent);
+        transition: width 0.3s linear;
+      }
+      .slide-counter {
+        position: absolute;
+        top: 130px;
+        right: 30px;
+        font-family: var(--font-m);
+        font-size: 14px;
+        color: var(--muted);
+        z-index: 2;
+      }
+      .logo-corner {
+        position: absolute;
+        top: 130px;
+        left: 30px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 2;
+      }
+      .logo-corner svg {
+        width: 32px;
+        height: 32px;
+      }
+      .logo-corner span {
+        font-family: var(--font-d);
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .logo-corner span .accent {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="video-container" id="videoContainer">
+      <div class="slides-wrapper" id="slidesWrapper">
+        <div class="slide">
+          <div class="slide-content">
+            <div class="slide-icon"><i class="fas fa-clock"></i></div>
+            <div class="slide-stat">
+              −5<span style="font-size: 32px"> часов</span>
+            </div>
+            <div class="slide-title">
+              Минус <span class="accent">пять часов</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="slide-content">
+            <div class="slide-icon"><i class="fas fa-calendar-xmark"></i></div>
+            <div class="slide-title">Бесполезное планирование</div>
+            <div class="slide-text">после очередного мита</div>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="slide-content">
+            <div class="slide-icon"><i class="fas fa-list-check"></i></div>
+            <div class="slide-title">
+              Задачи <span class="accent">не фиксируются</span>
+            </div>
+            <div class="slide-text">Сроки срываются</div>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="slide-content">
+            <div class="slide-icon"><i class="fas fa-tornado"></i></div>
+            <div class="slide-title">
+              Без автоматизации — <span class="accent">хаос</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="slide-content">
+            <div class="slide-icon"><i class="fas fa-microphone"></i></div>
+            <div class="slide-title">
+              Записывай <span class="accent">аудио созвона</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="slide-content">
+            <div class="slide-icon"><i class="fas fa-language"></i></div>
+            <div class="slide-title">
+              Доставай текст через <span class="accent">Whisper</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="slide-content">
+            <div class="slide-icon"><i class="fas fa-brain"></i></div>
+            <div class="slide-title">
+              Получи <span class="accent">задачу</span> из транскрипта
+            </div>
+            <div class="slide-text">через нейросеть</div>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="slide-content">
+            <div class="slide-icon"><i class="fas fa-link"></i></div>
+            <div class="slide-title">z2m.ru</div>
+            <div class="slide-text">
+              Всего пять символов — быстрее, чем переходить в профиль
+            </div>
+            <div class="slide-tag">Забирай бесплатный чеклист для бизнеса</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+
+      <div class="slide-counter" id="slideCounter">1 / 8</div>
+
+      <div class="logo-corner">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="32" height="32" rx="6" fill="#050806" />
+          <path
+            d="M16 5L25.5 10.5V21.5L16 27L6.5 21.5V10.5L16 5Z"
+            stroke="#D4FF33"
+            stroke-width="2"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M16 5V16L25.5 21.5M16 16L6.5 22M16 27V16L25.5 10.5M16 16L6.5 10.5"
+            stroke="#D4FF33"
+            stroke-width="1.2"
+            opacity="0.9"
+          />
+          <circle cx="16" cy="16" r="1.5" fill="#D4FF33" />
+        </svg>
+        <span>Cycle<span class="accent">less</span></span>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const wrapper = document.getElementById("slidesWrapper");
+        const progressFill = document.getElementById("progressFill");
+        const slideCounter = document.getElementById("slideCounter");
+        const slides = document.querySelectorAll(".slide");
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+        let autoPlayInterval;
+        const slideDuration = 3500; // 3.5 секунды на слайд
+
+        function goToSlide(index) {
+          if (index < 0) index = totalSlides - 1;
+          if (index >= totalSlides) index = 0;
+          currentSlide = index;
+          const translateY = -currentSlide * 1080;
+          wrapper.style.transform = `translateY(${translateY}px)`;
+          progressFill.style.width =
+            ((currentSlide + 1) / totalSlides) * 100 + "%";
+          slideCounter.textContent = currentSlide + 1 + " / " + totalSlides;
+        }
+
+        function nextSlide() {
+          goToSlide(currentSlide + 1);
+        }
+
+        function startAutoPlay() {
+          stopAutoPlay();
+          autoPlayInterval = setInterval(nextSlide, slideDuration);
+        }
+
+        function stopAutoPlay() {
+          if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+          }
+        }
+
+        goToSlide(0);
+        startAutoPlay();
+
+        const container = document.getElementById("videoContainer");
+        container.addEventListener("mouseenter", stopAutoPlay);
+        container.addEventListener("mouseleave", startAutoPlay);
+      })();
+    </script>
+  </body>
+</html>
