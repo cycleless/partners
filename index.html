@@ -6,11 +6,11 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>Cycleless — Минус пять часов</title>
+    <title>Cycleless Partners — партнёрская программа AI-интегратора</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link
@@ -18,9 +18,15 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       :root {
         --accent: #d4ff33;
-        --accent-dim: rgba(212, 255, 51, 0.08);
+        --accent-dim: rgba(212, 255, 51, 0.1);
         --accent-border: rgba(212, 255, 51, 0.25);
         --bg: #07080a;
         --bg-2: #0c0f13;
@@ -28,368 +34,937 @@
         --border: rgba(255, 255, 255, 0.06);
         --text: #dde4ec;
         --muted: #5a6a7a;
+        --dim: #2e3a48;
         --font-d: "Syne", sans-serif;
         --font-b: "DM Sans", sans-serif;
         --font-m: "JetBrains Mono", monospace;
+        --r: 16px;
+        --rl: 24px;
+        --rs: 8px;
       }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+
       body {
-        background: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
         font-family: var(--font-b);
+        line-height: 1.5;
         -webkit-font-smoothing: antialiased;
-        padding: env(safe-area-inset-top) env(safe-area-inset-right)
-          env(safe-area-inset-bottom) env(safe-area-inset-left);
       }
-      .video-container {
-        width: 608px;
-        height: 1080px;
-        position: relative;
-        overflow: hidden;
-        border-radius: 24px;
-        background: var(--bg);
-        box-shadow: 0 0 60px rgba(212, 255, 51, 0.1);
-      }
-      .slides-wrapper {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1.2);
-      }
-      .slide {
-        width: 100%;
-        height: 1080px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 100px 40px 80px;
-        position: relative;
-        background: var(--bg);
-        text-align: center;
-        box-sizing: border-box;
-      }
-      .slide::after {
+
+      body::before {
         content: "";
-        position: absolute;
+        position: fixed;
         inset: 0;
         background-image:
-          linear-gradient(rgba(212, 255, 51, 0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(212, 255, 51, 0.03) 1px, transparent 1px);
-        background-size: 64px 64px;
+          linear-gradient(rgba(212, 255, 51, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(212, 255, 51, 0.02) 1px, transparent 1px);
+        background-size: 48px 48px;
         pointer-events: none;
         z-index: 0;
       }
-      .slide-content {
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
         position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        max-width: 500px;
-        width: 100%;
       }
-      .slide-icon {
-        font-size: 72px;
+
+      section {
+        padding: 4rem 1.5rem;
+        position: relative;
+      }
+
+      /* gradient text */
+      .g {
+        background: linear-gradient(
+          135deg,
+          var(--accent) 0%,
+          #a78bfa 55%,
+          #38bdf8 100%
+        );
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      /* label style */
+      .lbl {
+        font-family: var(--font-m);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
         color: var(--accent);
-        margin-bottom: 12px;
-        filter: drop-shadow(0 0 20px rgba(212, 255, 51, 0.3));
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
       }
-      .slide-title {
+
+      .lbl::before {
+        content: "//";
+        opacity: 0.6;
+      }
+
+      /* nav */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(7, 8, 10, 0.88);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.9rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 1rem;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        text-decoration: none;
+      }
+
+      .logo-icon {
+        width: 34px;
+        height: 34px;
+        background: var(--bg-3);
+        border: 1px solid var(--accent-border);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logo-text {
         font-family: var(--font-d);
-        font-weight: 800;
-        font-size: 38px;
-        line-height: 1.1;
+        font-size: 1.3rem;
+        font-weight: 700;
         color: var(--text);
         letter-spacing: -0.02em;
       }
-      .slide-title .accent {
+
+      .logo-text span {
         color: var(--accent);
       }
-      .slide-subtitle {
-        font-family: var(--font-m);
-        font-size: 15px;
-        color: var(--muted);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-      }
-      .slide-stat {
-        font-family: var(--font-d);
-        font-weight: 800;
-        font-size: 60px;
-        color: var(--accent);
-        line-height: 1;
-        margin: 4px 0;
-      }
-      .slide-text {
-        font-size: 17px;
-        color: var(--text);
-        line-height: 1.5;
-        opacity: 0.85;
-      }
-      .slide-tag {
-        background: var(--accent-dim);
-        border: 1px solid var(--accent-border);
-        padding: 8px 18px;
-        border-radius: 30px;
-        font-family: var(--font-m);
-        font-size: 14px;
-        color: var(--accent);
-      }
-      .pipeline-row {
+
+      .nav-cta {
         display: flex;
         align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-top: 8px;
+        gap: 0.5rem;
+        background: var(--accent-dim);
+        border: 1px solid var(--accent-border);
+        color: var(--accent);
+        font-family: var(--font-m);
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        text-decoration: none;
+        padding: 0.45rem 1.2rem;
+        border-radius: 40px;
+        transition: all 0.2s;
       }
-      .pipeline-node {
+
+      .nav-cta:hover {
+        background: rgba(212, 255, 51, 0.2);
+        border-color: var(--accent);
+        box-shadow: 0 0 16px rgba(212, 255, 51, 0.15);
+      }
+
+      /* buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.8rem 2rem;
+        border-radius: 40px;
+        font-family: var(--font-b);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: #07080a;
+      }
+
+      .btn-primary:hover {
+        background: #e8ff66;
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(212, 255, 51, 0.3);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      .btn-outline:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.04);
+        transform: translateY(-1px);
+      }
+
+      /* hero */
+      .hero {
+        text-align: center;
+        padding: 5rem 1.5rem 4rem;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--bg-3);
+        border: 1px solid var(--accent-border);
+        border-radius: 40px;
+        padding: 0.3rem 1rem;
+        font-family: var(--font-m);
+        font-size: 0.7rem;
+        color: var(--accent);
+        margin-bottom: 2rem;
+      }
+
+      .hero h1 {
+        font-family: var(--font-d);
+        font-size: clamp(2.5rem, 7vw, 4.8rem);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-desc {
+        font-size: 1.1rem;
+        color: var(--muted);
+        max-width: 700px;
+        margin: 0 auto 2rem;
+        line-height: 1.6;
+      }
+
+      /* cards grid */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.8rem;
+        margin: 2.5rem 0;
+      }
+
+      .card {
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--rl);
+        padding: 1.8rem;
+        transition: all 0.25s;
+      }
+
+      .card:hover {
+        border-color: rgba(212, 255, 51, 0.25);
+        transform: translateY(-4px);
+      }
+
+      .card-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--accent-dim);
+        border: 1px solid var(--accent-border);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        font-size: 1.2rem;
+        margin-bottom: 1.4rem;
+      }
+
+      .card h3 {
+        font-family: var(--font-d);
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+      }
+
+      .card p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .card strong {
+        color: var(--text);
+      }
+
+      /* step list */
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .step {
+        background: var(--bg-3);
+        border-radius: var(--r);
+        padding: 1.5rem;
+        border-left: 3px solid var(--accent);
+      }
+
+      .step-num {
+        font-family: var(--font-m);
+        font-size: 0.75rem;
+        color: var(--accent);
+        margin-bottom: 0.8rem;
+        display: inline-block;
+        background: var(--accent-dim);
+        padding: 0.2rem 0.8rem;
+        border-radius: 30px;
+      }
+
+      .step h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .step p {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* commission highlight */
+      .commission-box {
+        background: linear-gradient(135deg, var(--bg-3), #0b0e16);
+        border-radius: var(--rl);
+        padding: 2rem;
+        border: 1px solid var(--accent-border);
+        text-align: center;
+        margin: 2rem 0;
+      }
+
+      .percent {
+        font-family: var(--font-d);
+        font-size: 4rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--accent), #38bdf8);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        line-height: 1;
+      }
+
+      /* materials row */
+      .materials {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        margin: 2rem 0;
+      }
+
+      .material-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: 60px;
+        padding: 0.7rem 1.4rem;
+        font-family: var(--font-m);
+        font-size: 0.8rem;
+        color: var(--text);
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+
+      .material-link i {
+        color: var(--accent);
+      }
+
+      .material-link:hover {
+        border-color: var(--accent-border);
+        background: var(--bg-3);
+        transform: translateY(-2px);
+      }
+
+      /* faq */
+      .faq-item {
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        margin-bottom: 1rem;
+        overflow: hidden;
+      }
+
+      .faq-question {
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-b);
+      }
+
+      .faq-question i {
+        color: var(--accent);
+        transition: transform 0.2s;
+      }
+
+      .faq-answer {
+        padding: 0 1.5rem 1.2rem 1.5rem;
+        color: var(--muted);
+        font-size: 0.85rem;
+        line-height: 1.65;
+        display: none;
+      }
+
+      .faq-answer.active {
+        display: block;
+      }
+
+      /* section headers */
+      .section-header {
+        margin-bottom: 2.5rem;
+      }
+
+      .section-header h2 {
+        font-family: var(--font-d);
+        font-size: clamp(1.8rem, 4vw, 2.6rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-top: 0.5rem;
+      }
+
+      .section-header p {
+        color: var(--muted);
+        max-width: 650px;
+        margin-top: 0.5rem;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      /* footer */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 2rem 1.5rem;
+      }
+
+      .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 8px;
-        background: var(--bg-3);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 18px 14px;
-        width: 100px;
+        gap: 1rem;
+        text-align: center;
       }
-      .pipeline-node i {
-        font-size: 28px;
-        color: var(--accent);
+
+      .footer-links {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        justify-content: center;
       }
-      .pipeline-node .node-title {
-        font-family: var(--font-m);
-        font-size: 11px;
-        color: var(--text);
-      }
-      .pipeline-node .node-sub {
-        font-size: 10px;
+
+      .footer-links a {
+        font-size: 0.8rem;
         color: var(--muted);
-      }
-      .pipeline-arrow {
-        color: var(--muted);
-        font-size: 18px;
-        margin: 0 2px;
-      }
-      .progress-bar {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: var(--border);
-        z-index: 2;
-      }
-      .progress-fill {
-        height: 100%;
-        background: var(--accent);
-        transition: width 0.3s linear;
-      }
-      .slide-counter {
-        position: absolute;
-        top: 130px;
-        right: 30px;
-        font-family: var(--font-m);
-        font-size: 14px;
-        color: var(--muted);
-        z-index: 2;
-      }
-      .logo-corner {
-        position: absolute;
-        top: 130px;
-        left: 30px;
+        text-decoration: none;
         display: flex;
         align-items: center;
-        gap: 8px;
-        z-index: 2;
+        gap: 0.4rem;
       }
-      .logo-corner svg {
-        width: 32px;
-        height: 32px;
-      }
-      .logo-corner span {
-        font-family: var(--font-d);
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--text);
-      }
-      .logo-corner span .accent {
+
+      .footer-links a:hover {
         color: var(--accent);
+      }
+
+      .copyright {
+        font-family: var(--font-m);
+        font-size: 0.7rem;
+        color: var(--dim);
+      }
+
+      @media (max-width: 700px) {
+        section {
+          padding: 2.5rem 1rem;
+        }
+        .hero {
+          padding: 3rem 1rem;
+        }
+        .nav-inner {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="video-container" id="videoContainer">
-      <div class="slides-wrapper" id="slidesWrapper">
-        <div class="slide">
-          <div class="slide-content">
-            <div class="slide-icon"><i class="fas fa-clock"></i></div>
-            <div class="slide-stat">
-              −5<span style="font-size: 32px"> часов</span>
-            </div>
-            <div class="slide-title">
-              Минус <span class="accent">пять часов</span>
-            </div>
+    <nav>
+      <div class="nav-inner">
+        <a href="#" class="logo">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+              <path
+                d="M16 4L28 10.5V21.5L16 28L4 21.5V10.5L16 4Z"
+                stroke="#d4ff33"
+                stroke-width="2"
+                stroke-linejoin="round"
+              />
+              <circle cx="16" cy="16" r="2" fill="#d4ff33" />
+            </svg>
+          </div>
+          <span class="logo-text">Cycle<span>less</span></span>
+        </a>
+        <a href="https://t.me/cycleless" target="_blank" class="nav-cta">
+          <i class="fab fa-telegram"></i> @cycleless
+        </a>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <div class="hero-badge">
+            <i class="fas fa-handshake"></i>
+            <span>Партнёрская программа</span>
+          </div>
+          <h1>Зарабатывайте <span class="g">до 15%</span> на AI-решениях</h1>
+          <p class="hero-desc">
+            Вы приводите клиентов — мы внедряем отказоустойчивых AI‑агентов. Вы
+            получаете стабильный процент со сделок и рекуррентный доход. Никаких
+            сложных регистраций: просто напишите нам в Telegram.
+          </p>
+          <div
+            style="
+              display: flex;
+              gap: 1rem;
+              justify-content: center;
+              flex-wrap: wrap;
+            "
+          >
+            <a
+              href="https://t.me/cycleless"
+              target="_blank"
+              class="btn btn-primary"
+            >
+              <i class="fab fa-telegram"></i> Стать партнёром
+            </a>
+            <a href="#conditions" class="btn btn-outline">
+              <i class="fas fa-file-signature"></i> Условия
+            </a>
           </div>
         </div>
+      </section>
 
-        <div class="slide">
-          <div class="slide-content">
-            <div class="slide-icon"><i class="fas fa-calendar-xmark"></i></div>
-            <div class="slide-title">Бесполезное планирование</div>
-            <div class="slide-text">после очередного мита</div>
-          </div>
-        </div>
-
-        <div class="slide">
-          <div class="slide-content">
-            <div class="slide-icon"><i class="fas fa-list-check"></i></div>
-            <div class="slide-title">
-              Задачи <span class="accent">не фиксируются</span>
+      <div
+        style="
+          background: var(--bg-2);
+          border-top: 1px solid var(--border);
+          border-bottom: 1px solid var(--border);
+          padding: 1.8rem 1.5rem;
+        "
+      >
+        <div class="container">
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: space-between;
+              gap: 1.5rem;
+              text-align: center;
+            "
+          >
+            <div>
+              <span
+                style="
+                  font-family: var(--font-d);
+                  font-size: 1.8rem;
+                  font-weight: 800;
+                  color: var(--accent);
+                "
+                >15%</span
+              ><br /><span style="font-size: 0.8rem; color: var(--muted)"
+                >с каждой сделки</span
+              >
             </div>
-            <div class="slide-text">Сроки срываются</div>
-          </div>
-        </div>
-
-        <div class="slide">
-          <div class="slide-content">
-            <div class="slide-icon"><i class="fas fa-tornado"></i></div>
-            <div class="slide-title">
-              Без автоматизации — <span class="accent">хаос</span>
+            <div>
+              <span
+                style="
+                  font-family: var(--font-d);
+                  font-size: 1.8rem;
+                  font-weight: 800;
+                  color: var(--accent);
+                "
+                >24/7</span
+              ><br /><span style="font-size: 0.8rem; color: var(--muted)"
+                >поддержка менеджера</span
+              >
             </div>
-          </div>
-        </div>
-
-        <div class="slide">
-          <div class="slide-content">
-            <div class="slide-icon"><i class="fas fa-microphone"></i></div>
-            <div class="slide-title">
-              Записывай <span class="accent">аудио созвона</span>
+            <div>
+              <span
+                style="
+                  font-family: var(--font-d);
+                  font-size: 1.8rem;
+                  font-weight: 800;
+                  color: var(--accent);
+                "
+                >100+</span
+              ><br /><span style="font-size: 0.8rem; color: var(--muted)"
+                >готовых модулей</span
+              >
             </div>
-          </div>
-        </div>
-
-        <div class="slide">
-          <div class="slide-content">
-            <div class="slide-icon"><i class="fas fa-language"></i></div>
-            <div class="slide-title">
-              Доставай текст через <span class="accent">Whisper</span>
+            <div>
+              <span
+                style="
+                  font-family: var(--font-d);
+                  font-size: 1.8rem;
+                  font-weight: 800;
+                  color: var(--accent);
+                "
+                >0₽</span
+              ><br /><span style="font-size: 0.8rem; color: var(--muted)"
+                >вход без взносов</span
+              >
             </div>
-          </div>
-        </div>
-
-        <div class="slide">
-          <div class="slide-content">
-            <div class="slide-icon"><i class="fas fa-brain"></i></div>
-            <div class="slide-title">
-              Получи <span class="accent">задачу</span> из транскрипта
-            </div>
-            <div class="slide-text">через нейросеть</div>
-          </div>
-        </div>
-
-        <div class="slide">
-          <div class="slide-content">
-            <div class="slide-icon"><i class="fas fa-link"></i></div>
-            <div class="slide-title">z2m.ru</div>
-            <div class="slide-text">
-              Всего пять символов — быстрее, чем переходить в профиль
-            </div>
-            <div class="slide-tag">Забирай бесплатный чеклист для бизнеса</div>
           </div>
         </div>
       </div>
 
-      <div class="progress-bar" id="progressBar">
-        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-      </div>
+      <div class="container" id="conditions">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-icon"><i class="fas fa-percent"></i></div>
+            <h3>Высокая комиссия</h3>
+            <p>
+              <strong>15% от разового сетапа</strong> и
+              <strong>15% от ежемесячного SLA</strong>. Клиент платит за
+              внедрение и поддержку — вы получаете процент.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+            <h3>Пассивный рекуррент</h3>
+            <p>
+              Подписная модель наших решений приносит вам деньги каждый месяц.
+              10 клиентов → средний чек ~7500₽/мес → 75 000₽ ежемесячно.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+            <h3>Не переманиваем</h3>
+            <p>
+              Вы остаётесь лицом для клиента. Мы — технологический партнёр,
+              работаем под вашим брендом. Все контакты и договоры — ваши.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i class="fas fa-bolt"></i></div>
+            <h3>Быстрый старт</h3>
+            <p>
+              Отправляем демки, презентации, скрипты продаж. Вы получаете
+              готовый пакет материалов в первый же день.
+            </p>
+          </div>
+        </div>
 
-      <div class="slide-counter" id="slideCounter">1 / 8</div>
+        <div class="commission-box">
+          <div class="lbl" style="justify-content: center">
+            Почему 15% выгодно
+          </div>
+          <div class="percent">15%</div>
+          <p style="margin: 0.8rem 0; font-size: 1rem">
+            С каждой сделки и с каждого месяца SLA
+          </p>
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: center;
+              gap: 1.5rem;
+              margin-top: 1rem;
+            "
+          >
+            <div>
+              <i class="fas fa-check-circle" style="color: var(--accent)"></i>
+              Пример: CRM‑Реаниматор + AI‑Звонки → сетап 198 000₽ → ваш доход
+              <strong>29 700₽</strong>
+            </div>
+            <div>
+              <i class="fas fa-check-circle" style="color: var(--accent)"></i>
+              Ежемесячный SLA 50 000₽ → ваш доход <strong>7 500₽/мес</strong> →
+              90 000₽ за год с одного клиента
+            </div>
+          </div>
+        </div>
 
-      <div class="logo-corner">
-        <svg
-          width="32"
-          height="32"
-          viewBox="0 0 32 32"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+        <div class="section-header">
+          <div class="lbl">Инструкция</div>
+          <h2>Как стать партнёром <span class="g">за 10 минут</span></h2>
+          <p>Никаких сложных форм и ожидания. Всё общение через Telegram.</p>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">Шаг 1</div>
+            <h4>Напишите @cycleless</h4>
+            <p>
+              В сообщении укажите «Хочу стать партнёром». Менеджер ответит в
+              течение часа в рабочее время.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-num">Шаг 2</div>
+            <h4>Получите пакет материалов</h4>
+            <p>
+              Мы вышлем презентацию, демо-доступ к платформе, готовые скрипты
+              продаж и примеры кейсов.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-num">Шаг 3</div>
+            <h4>Показывайте клиентам</h4>
+            <p>
+              Используйте наши демки и презентации. Мы бесплатно проводим вторую
+              встречу с вашим клиентом, если нужно.
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-num">Шаг 4</div>
+            <h4>Заключаем договор и получаете %</h4>
+            <p>
+              После подписания договора с клиентом мы переводим вашу комиссию.
+              Прозрачные отчёты и выплаты на карту или расчётный счёт.
+            </p>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top: 1rem">
+          <div class="lbl">Материалы</div>
+          <h2>Всё для продаж <span class="g">в одном месте</span></h2>
+        </div>
+        <div class="materials">
+          <a href="#" class="material-link" id="demoLink1"
+            ><i class="fas fa-chalkboard-user"></i> Демо-презентация PDF</a
+          >
+          <a href="#" class="material-link" id="demoLink2"
+            ><i class="fas fa-video"></i> Видео-демо платформы</a
+          >
+          <a href="#" class="material-link" id="demoLink3"
+            ><i class="fas fa-file-alt"></i> Коммерческое предложение
+            (шаблон)</a
+          >
+          <a href="#" class="material-link" id="demoLink4"
+            ><i class="fas fa-chart-simple"></i> Калькулятор доходности партнёра
+            (Excel)</a
+          >
+        </div>
+        <p
+          style="
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-align: center;
+            margin-bottom: 2rem;
+          "
         >
-          <rect width="32" height="32" rx="6" fill="#050806" />
-          <path
-            d="M16 5L25.5 10.5V21.5L16 27L6.5 21.5V10.5L16 5Z"
-            stroke="#D4FF33"
-            stroke-width="2"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M16 5V16L25.5 21.5M16 16L6.5 22M16 27V16L25.5 10.5M16 16L6.5 10.5"
-            stroke="#D4FF33"
-            stroke-width="1.2"
-            opacity="0.9"
-          />
-          <circle cx="16" cy="16" r="1.5" fill="#D4FF33" />
-        </svg>
-        <span>Cycle<span class="accent">less</span></span>
+          * после регистрации в партнёрской программе вы получите прямые ссылки
+          на актуальные версии
+        </p>
+
+        <div class="card" style="background: var(--bg-3); margin: 1.5rem 0">
+          <div class="card-icon"><i class="fas fa-microphone-alt"></i></div>
+          <h3>Что говорить клиенту? Готовый скрипт</h3>
+          <p style="margin-bottom: 0.5rem">
+            «Вы теряете до 40% лидов из-за ручного документооборота и отсутствия
+            AI-агентов. Мы внедряем модуль AI-Звонки + Реаниматор CRM —
+            возвращаем клиентов и экономим ваше время. Стоимость сетапа от 150к,
+            окупаемость — 2-3 месяца. Хотите посмотреть демо?»
+          </p>
+          <p>
+            <strong
+              >Мы дадим вам индивидуальный скрипт под ваш сегмент (SMB /
+              Enterprise).</strong
+            >
+          </p>
+          <div style="margin-top: 1rem">
+            <a
+              href="https://t.me/cycleless"
+              target="_blank"
+              class="btn btn-outline"
+              style="padding: 0.4rem 1.2rem"
+              ><i class="fab fa-telegram"></i> Запросить скрипт</a
+            >
+          </div>
+        </div>
+
+        <div class="section-header">
+          <div class="lbl">FAQ</div>
+          <h2>Ответы на <span class="g">важные вопросы</span></h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>❓ Какая минимальная сумма выплаты?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              Выплаты производятся от 10 000 ₽ раз в месяц. Можем чаще по
+              договорённости. Комиссия перечисляется после получения оплаты от
+              клиента.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>❓ Нужно ли подписывать договор?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              Да, мы заключаем партнёрский договор (оферта для самозанятых / ИП
+              / юрлиц). Простой электронный документооборот.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>❓ Как я узнаю о статусе сделки?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              Мы ведём общий чат с менеджером. Каждый этап согласовывается, вы в
+              курсе всех переговоров с клиентом. Прозрачно и без сюрпризов.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>❓ Могу ли я продавать модули по отдельности?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              Да, вы продаёте любые ядра и модули из нашего прайса. Комиссия
+              начисляется на каждый проданный компонент и его SLA.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>❓ Есть ли эксклюзивные условия для агентств?</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              Для партнёров с оборотом от 500 000 ₽ в месяц — повышаем комиссию
+              до 20%. Обсуждаем индивидуально.
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="
+            background: var(--bg-2);
+            border-radius: var(--rl);
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            margin: 3rem 0 2rem;
+          "
+        >
+          <h3
+            style="
+              font-family: var(--font-d);
+              font-size: 1.8rem;
+              font-weight: 800;
+            "
+          >
+            Готовы начать?
+          </h3>
+          <p style="color: var(--muted); margin: 0.8rem 0 1.5rem">
+            Один звонок или сообщение — и вы в деле. Получите все материалы
+            сегодня.
+          </p>
+          <a
+            href="https://t.me/cycleless"
+            target="_blank"
+            class="btn btn-primary"
+            style="font-size: 1rem"
+          >
+            <i class="fab fa-telegram"></i> Написать в Telegram @cycleless
+          </a>
+          <p style="margin-top: 1.2rem; font-size: 0.7rem; color: var(--dim)">
+            <i class="fas fa-laptop"></i> Менеджер ответит в течение 30 минут в
+            рабочие часы (МСК 10:00–20:00)
+          </p>
+        </div>
       </div>
-    </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div style="display: flex; align-items: center; gap: 0.6rem">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <path
+              d="M16 4L28 10.5V21.5L16 28L4 21.5V10.5L16 4Z"
+              stroke="#d4ff33"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+            <circle cx="16" cy="16" r="2" fill="#d4ff33" />
+          </svg>
+          <span style="font-family: var(--font-d); font-weight: 700"
+            >Cycleless Partners</span
+          >
+        </div>
+        <div class="footer-links">
+          <a href="https://t.me/cycleless" target="_blank"
+            ><i class="fab fa-telegram"></i> Telegram</a
+          >
+          <a href="#"><i class="fas fa-file-pdf"></i> Условия программы</a>
+          <a href="#"
+            ><i class="fas fa-lock"></i> Политика конфиденциальности</a
+          >
+        </div>
+        <div class="copyright">
+          © Cycleless — AI-интегратор. Партнёрская программа с выплатами до
+          15%<br />
+          Все права защищены
+        </div>
+      </div>
+    </footer>
 
     <script>
-      (function () {
-        const wrapper = document.getElementById("slidesWrapper");
-        const progressFill = document.getElementById("progressFill");
-        const slideCounter = document.getElementById("slideCounter");
-        const slides = document.querySelectorAll(".slide");
-        const totalSlides = slides.length;
-        let currentSlide = 0;
-        let autoPlayInterval;
-        const slideDuration = 3500; // 3.5 секунды на слайд
-
-        function goToSlide(index) {
-          if (index < 0) index = totalSlides - 1;
-          if (index >= totalSlides) index = 0;
-          currentSlide = index;
-          const translateY = -currentSlide * 1080;
-          wrapper.style.transform = `translateY(${translateY}px)`;
-          progressFill.style.width =
-            ((currentSlide + 1) / totalSlides) * 100 + "%";
-          slideCounter.textContent = currentSlide + 1 + " / " + totalSlides;
-        }
-
-        function nextSlide() {
-          goToSlide(currentSlide + 1);
-        }
-
-        function startAutoPlay() {
-          stopAutoPlay();
-          autoPlayInterval = setInterval(nextSlide, slideDuration);
-        }
-
-        function stopAutoPlay() {
-          if (autoPlayInterval) {
-            clearInterval(autoPlayInterval);
-            autoPlayInterval = null;
+      // Аккордеон для FAQ
+      const faqQuestions = document.querySelectorAll(".faq-question");
+      faqQuestions.forEach((q) => {
+        q.addEventListener("click", () => {
+          const answer = q.nextElementSibling;
+          const icon = q.querySelector("i");
+          if (answer.classList.contains("active")) {
+            answer.classList.remove("active");
+            icon.style.transform = "rotate(0deg)";
+          } else {
+            answer.classList.add("active");
+            icon.style.transform = "rotate(180deg)";
           }
-        }
+        });
+      });
 
-        goToSlide(0);
-        startAutoPlay();
-
-        const container = document.getElementById("videoContainer");
-        container.addEventListener("mouseenter", stopAutoPlay);
-        container.addEventListener("mouseleave", startAutoPlay);
-      })();
+      // Для демо-ссылок: показываем сообщение, что материалы выдаются при регистрации
+      const demoLinks = document.querySelectorAll(".material-link");
+      demoLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          alert(
+            "📁 Презентации и демо доступны партнёрам. Напишите @cycleless в Telegram, и мы сразу вышлем вам полный пакет материалов.",
+          );
+        });
+      });
     </script>
   </body>
 </html>
