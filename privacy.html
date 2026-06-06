@@ -1,0 +1,55 @@
+
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cycleless — Политика конфиденциальности</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{--accent:#d4ff33;--accent-dim:rgba(212,255,51,.1);--accent-border:rgba(212,255,51,.25);--bg:#07080a;--bg-2:#0c0f13;--bg-3:#111620;--border:rgba(255,255,255,.06);--text:#dde4ec;--muted:#5a6a7a;--font-d:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;--font-m:'JetBrains Mono',monospace;--r:16px;--rl:24px}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);font-family:var(--font-b);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:4rem 1.5rem}
+    body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(212,255,51,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(212,255,51,.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0}
+    .wrap{max-width:720px;width:100%;position:relative;z-index:1}
+    .back{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-m);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-decoration:none;margin-bottom:2.5rem;padding:.4rem .9rem;border:1px solid var(--border);border-radius:40px;transition:all .2s}
+    .back:hover{color:var(--accent);border-color:var(--accent-border)}
+    .doc-card{background:var(--bg-2);border:1px solid rgba(212,255,51,.15);border-radius:var(--rl);padding:2.5rem}
+    h1{font-family:var(--font-d);font-size:1.9rem;font-weight:800;letter-spacing:-.02em;margin-bottom:2rem;line-height:1.2}
+    .section{border-left:2px solid var(--accent);padding-left:1.25rem;margin-bottom:1.75rem}
+    .sec-label{font-family:var(--font-m);font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:.55rem}
+    .section p{font-size:.88rem;color:var(--muted);line-height:1.75}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="index.html" class="back"><i class="fas fa-arrow-left"></i> Вернуться</a>
+    <div class="doc-card">
+      <h1>Политика обработки персональных данных</h1>
+      <div class="section">
+        <div class="sec-label">01 — Оператор</div>
+        <p>Проект CYCLELESS (далее — Оператор). Мы собираем данные для предоставления R&D услуг и глубокого архитектурного аудита.</p>
+      </div>
+      <div class="section">
+        <div class="sec-label">02 — Состав данных</div>
+        <p>Имя, контактные данные (Telegram, Email, Телефон), аудиозаписи задач, технические метрики устройства (IP, User-Agent, время на сайте).</p>
+      </div>
+      <div class="section">
+        <div class="sec-label">03 — Цель и правовое основание</div>
+        <p>Основание: ваше прямое согласие (ст. 9 152-ФЗ РФ, Art. 6 GDPR). Цель: идентификация заказчика и проведение предварительного анализа сложности проекта.</p>
+      </div>
+      <div class="section">
+        <div class="sec-label">04 — Хранение и безопасность</div>
+        <p>Данные хранятся локально на серверах в РФ. Аудиозаписи удаляются после расшифровки и постановки ТЗ, если не согласовано иное. Мы используем шифрование для защиты ваших данных.</p>
+      </div>
+      <div class="section">
+        <div class="sec-label">05 — Ваши права</div>
+        <p>Вы имеете право на отзыв согласия. Пишите на наш контактный адрес для полного удаления данных. Мы уничтожим их в течение 30 дней.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
